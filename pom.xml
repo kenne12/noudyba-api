@@ -172,7 +172,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>kgdev/noudyba-app</repository>
+                    <repository>kennegervais/noudyba-app</repository>
                     <tag>${project.version}</tag>
                     <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                 </configuration>
