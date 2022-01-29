@@ -48,8 +48,8 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - name: kubectl - Google Cloud GKE cluster.
-        # uses: ameydev/gke-kubectl-action@master
-        uses: docker/build-push-action@v2
+        uses: ameydev/gke-kubectl-action@master
+        # uses: docker/build-push-action@v2
         env:
           PROJECT_ID: ${{ env.PROJECT_ID }}
           APPLICATION_CREDENTIALS: ${{ secrets.GKE_SA_KEY }}
