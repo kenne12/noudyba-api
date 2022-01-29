@@ -42,7 +42,7 @@ public class VilleControllerTest {
     @BeforeAll
     @AfterAll
     public void clearDataBase() {
-        villeRepository.deleteAll();
+        //villeRepository.deleteAll();
         json = null;
     }
 
@@ -59,7 +59,7 @@ public class VilleControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("City saved saved successfully"))
+                .andExpect(jsonPath("$.message").value("Ville saved successfully"))
                 .andExpect(jsonPath("$.data.nom").value("Bafoussam"))
                 .andExpect(jsonPath("$.data.idVille").exists())
                 .andExpect(jsonPath("$.statusCode", is(201)))
@@ -77,7 +77,7 @@ public class VilleControllerTest {
                         .get("/api/v1/ville/get/" + json.getJSONObject("data").getInt("idVille")))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("City fetched with id " + json.getJSONObject("data").getInt("idVille")))
+                .andExpect(jsonPath("$.message").value("Ville fetched successfully"))
                 .andExpect(jsonPath("$.data.nom", is("Bafoussam")));
         //.andExpect(jsonPath("$.message", is("City fetched with id " + json.getJSONObject("data").getInt("idVille"))));
     }
@@ -92,7 +92,7 @@ public class VilleControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data[0].nom", is("Bafoussam")))
-                .andExpect(jsonPath("$.message").value("Cities list fetch successfully"));
+                .andExpect(jsonPath("$.message").value("Villes list fetched successfully"));
 
     }
 
@@ -110,7 +110,7 @@ public class VilleControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.nom", is("Douala")))
-                .andExpect(jsonPath("$.message", is("City edited successfully")))
+                .andExpect(jsonPath("$.message", is("Ville edited successfully")))
                 .andExpect(jsonPath("$.data.idVille", is(json.getJSONObject("data").getInt("idVille"))));
     }
 
@@ -122,11 +122,11 @@ public class VilleControllerTest {
                         MockMvcRequestBuilders.delete("/api/v1/ville/delete/" + json.getJSONObject("data").getInt("idVille")))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message", is("City deleted successfully")));
+                .andExpect(jsonPath("$.message", is("Ville deleted successfully")));
 
     }
 
-    @Test
+    /*@Test
     @Order(value = 6)
     @DisplayName("Wrong studend Id")
     public void testThatWeCanNotFindStudent() throws Exception {
@@ -138,5 +138,5 @@ public class VilleControllerTest {
                 .andExpect(jsonPath("$.httpStatus" , is("NOT_FOUND")))
                 .andExpect(jsonPath("$.message" , is("Entity not found" )));
 
-    }
+    }*/
 }

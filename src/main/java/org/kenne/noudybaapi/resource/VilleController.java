@@ -25,7 +25,7 @@ public class VilleController {
     public ResponseEntity<Response<List<VilleResponseDTO>>> findAll() {
         Response<List<VilleResponseDTO>> response = Response.<List<VilleResponseDTO>>builder()
                 .data(villeService.findAll())
-                .message("Villes list fetch successfully")
+                .message("Villes list fetched successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();

@@ -1,3 +1,6 @@
+# git-action.yml
+src/main/resources/git-action.yml
+composed-mason-339710-d617542ea908.json
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
