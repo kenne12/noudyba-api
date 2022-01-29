@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: noudyba-app
-          image: kgdev/noudyba-app:0.0.1
+          image: kennegervais/noudyba-app:0.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8050
