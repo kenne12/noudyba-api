@@ -1,7 +1,5 @@
 package org.kenne.noudybaapi.repository;
 
-import org.kenne.noudybaapi.domain.Contribution;
-import org.kenne.noudybaapi.domain.Poste;
 import org.kenne.noudybaapi.domain.Souscription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,8 +14,11 @@ public interface SouscriptionRepository extends JpaRepository<Souscription, Long
     Long nexId();
 
     @Query("select s from Souscription s where s.membre.idMembre=:idMembre")
-    List<Souscription> findContributionByIdMembre(@Param(value = "idMembre") Long idMembre);
+    List<Souscription> findSouscriptionByIdMembre(@Param("idMembre") Long idMembre);
 
     @Query("select s from Souscription s where s.evenement.idEvenement=:idEvenement")
-    List<Souscription> findContributionByIdevenement(@Param(value = "idEvenement") Long idEvenement);
+    List<Souscription> findSouscriptionByIdevenement(@Param("idEvenement") Long idEvenement);
+
+    @Query("select s from Souscription s where s.evenement.annee.idAnnee=:id_annee order by s.dateSouscription, s.idSouscription")
+    List<Souscription> findAllByIdannee(@Param("id_annee") Integer idAannee);
 }

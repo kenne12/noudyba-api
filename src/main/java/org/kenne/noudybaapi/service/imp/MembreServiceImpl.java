@@ -70,7 +70,7 @@ public class MembreServiceImpl implements MembreService {
     @Override
     public boolean delete(Long id) {
         log.info("Delete member with {id} ", id);
-        if (!souscriptionRepository.findContributionByIdMembre(id).isEmpty())
+        if (!souscriptionRepository.findSouscriptionByIdMembre(id).isEmpty())
             throw new MemberDeleteException("Member can not be deleted", "The member has many subscriptions");
 
         if (!contributionRepository.findContributionByIdMembre(id).isEmpty())

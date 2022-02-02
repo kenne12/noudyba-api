@@ -1,6 +1,7 @@
 package org.kenne.noudybaapi.service.imp;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.kenne.noudybaapi.domain.Operation;
 import org.kenne.noudybaapi.enumeration.OperationType;
 import org.kenne.noudybaapi.domain.PayementSouscription;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @AllArgsConstructor
+@Slf4j
 public class PayementSouscriptionServiceImpl implements PayementSouscriptionService {
 
     private final PayementSouscriptionRepository payementSouscriptionRepository;
@@ -37,11 +39,17 @@ public class PayementSouscriptionServiceImpl implements PayementSouscriptionServ
     @Override
     public PayementSouscriptionResponseDTO save(PayementSouscriptionRequestDTO requestDTO) {
 
+        log.info("Save new SubscriptionPayment {} ");
+
         Souscription souscription = souscriptionRepository.findById(requestDTO.getIdSouscription())
                 .orElseThrow(() -> new EntityNotFoundException("Souscription not found with id : " + requestDTO.getIdSouscription()));
 
-        // if ((souscription.getMontant() != souscription.getMontantPaye()))
-        // save operation
+        if (!(souscription.getMontantPaye() < souscription.getMontant()))
+            throw new RuntimeException("Cette souscription a déjà complètement reglée");
+
+        if ((souscription.getMontantPaye() + requestDTO.getMontant()) > souscription.getMontant())
+            throw new RuntimeException("Le montant restant à payer est incorrect : " + (souscription.getMontant() - souscription.getMontantPaye()));
+
 
         OperationRequestDTO operationRequest = OperationRequestDTO.builder()
                 .montant(requestDTO.getMontant())
@@ -69,19 +77,23 @@ public class PayementSouscriptionServiceImpl implements PayementSouscriptionServ
 
     @Override
     public PayementSouscriptionResponseDTO edit(PayementSouscriptionRequestDTO requestDTO) {
+
+        log.warn("Edit SubscriptionPayment with {Id} ", requestDTO.getIdSouscription());
+
         PayementSouscription payement = payementSouscriptionRepository.findById(requestDTO.getIdPayementSouscription())
                 .orElseThrow(() -> new EntityNotFoundException("Payement not found with id : " + requestDTO.getIdPayementSouscription()));
 
         if (!Objects.equals(requestDTO.getMontant(), payement.getMontant())) {
             Operation operation = payement.getOperation();
             operation.setMontant(requestDTO.getMontant());
-            payement.setOperation(  operation );
+            payement.setOperation(operation);
         }
         return PayementSouscriptionMapper.INSTANCE.fromEntityToResponse(payement);
     }
 
     @Override
     public boolean delete(Long id) {
+        log.info("Delete SubscriptionPayment with {Id} ", id);
         PayementSouscription ps = payementSouscriptionRepository.findById(id)
                 .orElseThrow(() -> new EntityDeletionException("Payement can not be deleted", "Payement not found with id : " + id));
         // update initial souscription
@@ -92,19 +104,29 @@ public class PayementSouscriptionServiceImpl implements PayementSouscriptionServ
         payementSouscriptionRepository.deleteById(ps.getIdPayementSouscription());
 
         // delete associated operation
-        operationService.delete(id);
+        operationService.delete(ps.getOperation().getIdOperation());
         return true;
     }
 
     @Override
     public PayementSouscriptionResponseDTO findById(Long id) {
+        log.info("Fetch SubscriptionPayment with {Id} ", id);
         Optional<PayementSouscription> response = payementSouscriptionRepository.findById(id);
         return response.map(PayementSouscriptionMapper.INSTANCE::fromEntityToResponse).orElse(null);
     }
 
     @Override
     public List<PayementSouscriptionResponseDTO> getAll() {
+        log.info("Fetch All SubscriptionPayment with");
         return payementSouscriptionRepository.findAll()
+                .stream()
+                .map(PayementSouscriptionMapper.INSTANCE::fromEntityToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PayementSouscriptionResponseDTO> getAllByIdannee(int idAnnee) {
+        return payementSouscriptionRepository.findAllByIdannee(idAnnee)
                 .stream()
                 .map(PayementSouscriptionMapper.INSTANCE::fromEntityToResponse)
                 .collect(Collectors.toList());

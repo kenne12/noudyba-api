@@ -24,7 +24,7 @@ public class PayementSouscription {
     @JoinColumn(name = "id_souscription", referencedColumnName = "id_souscription" , updatable = false)
     private Souscription souscription;
 
-    @Min(1)
+    @Min(value = 1 , message = "Payment amount can not be less than 1")
     private Double montant;
 
     @Temporal(TemporalType.DATE)

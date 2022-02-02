@@ -1,15 +1,17 @@
 package org.kenne.noudybaapi.dto;
 
 import lombok.Builder;
-import org.kenne.noudybaapi.domain.Evenement;
+import lombok.Data;
 
 import java.util.Date;
 
 @Builder
+@Data
 public class ContributionResponseDTO {
 
     private Long idContribution;
     private double montant;
     private Date dateContribution;
-    private Evenement evenement;
+    private EvenementResponseDTO evenement;
+    private MembreResponseDTO membre;
 }

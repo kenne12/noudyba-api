@@ -15,5 +15,7 @@ public interface SouscriptionService {
 
     List<SouscriptionResponseDTO> getAllSouscription();
 
+    List<SouscriptionResponseDTO> getAllByIdanne(int idAnnee);
+
     SouscriptionResponseDTO findById(Long id);
 }

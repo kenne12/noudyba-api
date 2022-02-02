@@ -3,10 +3,6 @@ package org.kenne.noudybaapi.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.kenne.noudybaapi.domain.Annee;
-import org.kenne.noudybaapi.domain.Evenement;
-import org.kenne.noudybaapi.domain.Rubrique;
-import org.kenne.noudybaapi.domain.Souscription;
 
 import javax.validation.constraints.Min;
 import java.util.Date;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.kenne.noudybaapi.domain.Annee;
 import org.kenne.noudybaapi.domain.Evenement;
 import org.kenne.noudybaapi.dto.EvenementRequestDTO;
 import org.kenne.noudybaapi.dto.EvenementResponseDTO;
@@ -58,13 +59,14 @@ public class EvenementServiceImpl implements EvenementService {
 
     @Override
     public boolean delete(Long id) {
+        log.info("Delete Event with id : ", id);
         if (!contributionRepository.findContributionByIdevenement(id).isEmpty())
-            throw new EntityDeletionException("Souscription can not be deleted", "Event is associated to more contribution");
+            throw new EntityDeletionException("Event can not be deleted", "Event is associated to more contribution");
 
-        if (!souscriptionRepository.findContributionByIdevenement(id).isEmpty())
-            throw new EntityDeletionException("Souscription can not be deleted", "Event is associated to more subscription");
+        if (!souscriptionRepository.findSouscriptionByIdevenement(id).isEmpty())
+            throw new EntityDeletionException("Events can not be deleted", "Event is associated to more subscription");
 
-        contributionRepository.deleteById(id);
+        evenementRepository.deleteById(id);
         return true;
     }
 
@@ -79,7 +81,17 @@ public class EvenementServiceImpl implements EvenementService {
     }
 
     @Override
+    public List<EvenementResponseDTO> getAllByIdanne(int idAnnee) {
+        log.info("Fetch all events with {id_annee}", idAnnee);
+        return evenementRepository.findAllByAnneeOrderByIdEvenement(new Annee(idAnnee))
+                .stream()
+                .map(EvenementMapper.INSTANCE::fromEntityToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public EvenementResponseDTO findById(Long id) {
+        log.info("Fetch Event With id : ", id);
         Optional<Evenement> evenement = evenementRepository.findById(id);
         return evenement.map(EvenementMapper.INSTANCE::fromEntityToResponse).orElse(null);
     }

@@ -15,5 +15,7 @@ public interface ContributionService {
 
     List<ContributionResponseDTO> getAll();
 
+    List<ContributionResponseDTO> getAllByIdannee(Integer idAnnee);
+
     ContributionResponseDTO findById(Long id);
 }

@@ -15,5 +15,7 @@ public interface EvenementService {
 
     List<EvenementResponseDTO> getAllEvents();
 
+    List<EvenementResponseDTO> getAllByIdanne(int idAnnee);
+
     EvenementResponseDTO findById(Long id);
 }

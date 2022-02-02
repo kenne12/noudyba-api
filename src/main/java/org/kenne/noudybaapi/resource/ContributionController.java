@@ -1,5 +1,6 @@
 package org.kenne.noudybaapi.resource;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.kenne.noudybaapi.common.Response;
 import org.kenne.noudybaapi.dto.ContributionRequestDTO;
@@ -8,12 +9,14 @@ import org.kenne.noudybaapi.service.declaration.ContributionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/contribution")
+@Tag(name = "ContributionDirectController")
 public class ContributionController {
 
     private final ContributionService service;
@@ -29,11 +32,22 @@ public class ContributionController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/list/all/{id_annee}")
+    public ResponseEntity<Response<List<ContributionResponseDTO>>> findAllByIdannee(@PathVariable("id_annee") Integer id) {
+        Response<List<ContributionResponseDTO>> response = Response.<List<ContributionResponseDTO>>builder()
+                .data(service.getAllByIdannee(id))
+                .message("Contribution list fetch successfully by id_annee")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Response<ContributionResponseDTO>> save(@RequestBody @Valid ContributionRequestDTO requestDTO) {
         Response<ContributionResponseDTO> response = Response.<ContributionResponseDTO>builder()
                 .data(service.save(requestDTO))
-                .message("Contribution saved saved successfully")
+                .message("Contribution saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
                 .build();

@@ -34,6 +34,17 @@ public class EvenementController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/list/all/{id_annee}")
+    public ResponseEntity<Response<List<EvenementResponseDTO>>> find_all_by_annee(@PathVariable("id_annee") Integer id_annee) {
+        Response<List<EvenementResponseDTO>> response = Response.<List<EvenementResponseDTO>>builder()
+                .data(evenementService.getAllByIdanne(id_annee))
+                .message("Events list fetch successfully with id")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Response<EvenementResponseDTO>> save(@RequestBody @Valid EvenementRequestDTO requestDTO) {
         Response<EvenementResponseDTO> response = Response.<EvenementResponseDTO>builder()
@@ -73,9 +84,9 @@ public class EvenementController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response<?>> delete(@PathVariable("id") Long id) {
-        boolean result = evenementService.delete(id);
+        evenementService.delete(id);
         Response<?> response = Response.builder()
-                .message(result ? "Event deleted successfully" : "Event can not be deleted")
+                .message("Event deleted successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();

@@ -1,5 +1,6 @@
 package org.kenne.noudybaapi.resource;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.kenne.noudybaapi.common.Response;
 import org.kenne.noudybaapi.dto.VilleRequestDTO;
@@ -17,6 +18,7 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/ville")
+@Tag(name = "VilleController")
 public class VilleController {
 
     private final VilleService villeService;

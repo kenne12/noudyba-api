@@ -1,13 +1,14 @@
 package org.kenne.noudybaapi.service.imp;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.kenne.noudybaapi.domain.Contribution;
 import org.kenne.noudybaapi.domain.Evenement;
 import org.kenne.noudybaapi.domain.Operation;
-import org.kenne.noudybaapi.enumeration.OperationType;
 import org.kenne.noudybaapi.dto.ContributionRequestDTO;
 import org.kenne.noudybaapi.dto.ContributionResponseDTO;
 import org.kenne.noudybaapi.dto.OperationRequestDTO;
+import org.kenne.noudybaapi.enumeration.OperationType;
 import org.kenne.noudybaapi.exception.EntityNotFoundException;
 import org.kenne.noudybaapi.mapper.ContributionMapper;
 import org.kenne.noudybaapi.repository.ContributionRepository;
@@ -19,12 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class ContributionServiceImpl implements ContributionService {
 
     private final ContributionRepository contributionRepository;
@@ -34,6 +35,7 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     public ContributionResponseDTO save(ContributionRequestDTO requestDTO) {
+        log.info("Save new Contribution {} ");
 
         Evenement evenement = evenementRepository.getById(requestDTO.getIdEvenement());
 
@@ -56,16 +58,17 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     public ContributionResponseDTO edit(ContributionRequestDTO requestDTO) {
+        log.info("Edit Contribution with {Id}", requestDTO.getIdContribution());
         Contribution contribution = contributionRepository.findById(requestDTO.getIdContribution())
                 .orElseThrow(() -> new EntityNotFoundException("Contribution not found with id : " + requestDTO.getIdContribution()));
 
         contribution.setMontant(requestDTO.getMontant());
         return ContributionMapper.INSTANCE.fromEntityToResponse(contributionRepository.save(contribution));
-        //if(!Objects.equals(requestDTO.getMontant() , contribution.getMontant())
     }
 
     @Override
     public boolean delete(Long id) {
+        log.warn("Delete Contribution with {Id}", id);
         Contribution contribution = contributionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Contribution with id : " + id + " doesn't exist"));
         contributionRepository.deleteById(contribution.getIdContribution());
@@ -75,6 +78,7 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     public List<ContributionResponseDTO> getAll() {
+        log.info("Fetch all Contribution");
         return contributionRepository.findAll()
                 .stream()
                 .map(ContributionMapper.INSTANCE::fromEntityToResponse)
@@ -82,7 +86,17 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
+    public List<ContributionResponseDTO> getAllByIdannee(Integer idAnnee) {
+        log.info("Fetch all Contribution with id_annee", idAnnee);
+        return contributionRepository.findAllByIdannee(idAnnee)
+                .stream()
+                .map(ContributionMapper.INSTANCE::fromEntityToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ContributionResponseDTO findById(Long id) {
+        log.info("Fetch Contribution with {Id}", id);
         Contribution contribution = contributionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Contribution not found with id : " + id));
         return ContributionMapper.INSTANCE.fromEntityToResponse(contribution);

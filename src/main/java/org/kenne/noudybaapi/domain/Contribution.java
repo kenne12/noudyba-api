@@ -18,7 +18,7 @@ public class Contribution {
     @Column(name = "id_contribution")
     private Long idContribution;
 
-    @Min(1)
+    @Min(value = 1 , message = "Amount can not be less than 1")
     private double montant;
 
     @Temporal(TemporalType.DATE)

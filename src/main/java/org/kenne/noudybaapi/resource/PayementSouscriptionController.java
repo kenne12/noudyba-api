@@ -1,5 +1,6 @@
 package org.kenne.noudybaapi.resource;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.kenne.noudybaapi.common.Response;
 import org.kenne.noudybaapi.dto.PayementSouscriptionRequestDTO;
@@ -17,6 +18,7 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/payement")
+@Tag(name = "PayementController")
 public class PayementSouscriptionController {
 
     private final PayementSouscriptionService service;
@@ -25,7 +27,18 @@ public class PayementSouscriptionController {
     public ResponseEntity<Response<List<PayementSouscriptionResponseDTO>>> findAll() {
         Response<List<PayementSouscriptionResponseDTO>> response = Response.<List<PayementSouscriptionResponseDTO>>builder()
                 .data(service.getAll())
-                .message("Payement list fetch successfully")
+                .message("Payment list fetch successfully")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list/all/{id_annee}")
+    public ResponseEntity<Response<List<PayementSouscriptionResponseDTO>>> findAll(@PathVariable("id_annee") Integer id_annee) {
+        Response<List<PayementSouscriptionResponseDTO>> response = Response.<List<PayementSouscriptionResponseDTO>>builder()
+                .data(service.getAllByIdannee(id_annee))
+                .message("Payment list fetch successfully with {Id}")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -36,7 +49,7 @@ public class PayementSouscriptionController {
     public ResponseEntity<Response<PayementSouscriptionResponseDTO>> save(@RequestBody @Valid PayementSouscriptionRequestDTO requestDTO) {
         Response<PayementSouscriptionResponseDTO> response = Response.<PayementSouscriptionResponseDTO>builder()
                 .data(service.save(requestDTO))
-                .message("Payement saved saved successfully")
+                .message("Payment saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
                 .build();
@@ -48,7 +61,7 @@ public class PayementSouscriptionController {
         requestDTO.setIdPayementSouscription(id);
         Response<PayementSouscriptionResponseDTO> response = Response.<PayementSouscriptionResponseDTO>builder()
                 .data(service.edit(requestDTO))
-                .message("Payement edited successfully")
+                .message("Payment edited successfully with {Id}")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -58,11 +71,11 @@ public class PayementSouscriptionController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Response<PayementSouscriptionResponseDTO>> findById(@PathVariable("id") Long id) {
         PayementSouscriptionResponseDTO responseDto = service.findById(id);
-        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Entity Not Found With Id " + id);
+        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Entity Not Found With {Id} " + id);
 
         Response<PayementSouscriptionResponseDTO> response = Response.<PayementSouscriptionResponseDTO>builder()
                 .data(responseDto)
-                .message("Payement fetched with id " + id)
+                .message("Payment fetched successfully")
                 .status(HttpStatus.FOUND)
                 .statusCode(HttpStatus.FOUND.value())
                 .build();
@@ -71,9 +84,9 @@ public class PayementSouscriptionController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response<?>> delete(@PathVariable("id") Long id) {
-        boolean result = service.delete(id);
+        service.delete(id);
         Response<?> response = Response.builder()
-                .message(result ? "Event deleted successfully" : "Event can not be deleted")
+                .message("Payment deleted successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();

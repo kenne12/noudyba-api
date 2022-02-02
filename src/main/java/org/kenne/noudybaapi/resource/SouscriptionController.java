@@ -1,5 +1,6 @@
 package org.kenne.noudybaapi.resource;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.kenne.noudybaapi.common.Response;
 import org.kenne.noudybaapi.dto.SouscriptionRequestDTO;
@@ -17,6 +18,7 @@ import java.util.Objects;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/subscription")
+@Tag(name = "SubscriptionController")
 public class SouscriptionController {
 
     private final SouscriptionService souscriptionService;
@@ -25,7 +27,18 @@ public class SouscriptionController {
     public ResponseEntity<Response<List<SouscriptionResponseDTO>>> findAll() {
         Response<List<SouscriptionResponseDTO>> response = Response.<List<SouscriptionResponseDTO>>builder()
                 .data(souscriptionService.getAllSouscription())
-                .message("Events list fetch successfully")
+                .message("Subscriptions list fetch successfully")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list/all/{id_annee}")
+    public ResponseEntity<Response<List<SouscriptionResponseDTO>>> findAllByIdannee(@PathVariable("id_annee") Integer id_annee) {
+        Response<List<SouscriptionResponseDTO>> response = Response.<List<SouscriptionResponseDTO>>builder()
+                .data(souscriptionService.getAllByIdanne(id_annee))
+                .message("Subscriptions list fetch successfully with {id_annee}")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -36,7 +49,7 @@ public class SouscriptionController {
     public ResponseEntity<Response<SouscriptionResponseDTO>> save(@RequestBody @Valid SouscriptionRequestDTO requestDTO) {
         Response<SouscriptionResponseDTO> response = Response.<SouscriptionResponseDTO>builder()
                 .data(souscriptionService.save(requestDTO))
-                .message("Subscription saved saved successfully")
+                .message("Subscription saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
                 .build();
@@ -45,10 +58,10 @@ public class SouscriptionController {
 
     @PutMapping("/edit/{id}")
     public ResponseEntity<Response<SouscriptionResponseDTO>> edit(@PathVariable("id") Long id, @RequestBody @Valid SouscriptionRequestDTO requestDTO) {
-        requestDTO.setIdEvenement(id);
+        requestDTO.setIdSouscription(id);
         Response<SouscriptionResponseDTO> response = Response.<SouscriptionResponseDTO>builder()
                 .data(souscriptionService.edit(requestDTO))
-                .message("Souscription edited successfully")
+                .message("Subscription edited successfully with {Id}")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -58,11 +71,11 @@ public class SouscriptionController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Response<SouscriptionResponseDTO>> findById(@PathVariable("id") Long id) {
         SouscriptionResponseDTO responseDto = souscriptionService.findById(id);
-        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Subscription not found with Id " + id);
+        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Subscription not found with {Id} " + id);
 
         Response<SouscriptionResponseDTO> response = Response.<SouscriptionResponseDTO>builder()
                 .data(responseDto)
-                .message("Souscription fetched successfully")
+                .message("Subscription fetched successfully")
                 .status(HttpStatus.FOUND)
                 .statusCode(HttpStatus.FOUND.value())
                 .build();
@@ -73,7 +86,7 @@ public class SouscriptionController {
     public ResponseEntity<Response<?>> delete(@PathVariable("id") Long id) {
         souscriptionService.delete(id);
         Response<?> response = Response.builder()
-                .message("Souscription deleted successfully")
+                .message("Subscription deleted successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();

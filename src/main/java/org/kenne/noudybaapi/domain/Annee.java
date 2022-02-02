@@ -38,4 +38,8 @@ public class Annee {
 
     private boolean etat;
     private boolean cloturee;
+
+    public Annee(Integer idAnnee) {
+        this.idAnnee = idAnnee;
+    }
 }

@@ -20,7 +20,7 @@ public class Evenement {
     private Long idEvenement;
 
     @NotNull(message = "Event code not be null")
-    @Length(min = 8 , max = 10 , message = "The length of event code is not correct")
+    @Length(min = 8, max = 10, message = "The length of event code is not correct")
     private String code;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,4 +47,8 @@ public class Evenement {
 
     @Column(length = 100)
     private String commentaire;
+
+    public Evenement(Long idEvenement) {
+        this.idEvenement = idEvenement;
+    }
 }

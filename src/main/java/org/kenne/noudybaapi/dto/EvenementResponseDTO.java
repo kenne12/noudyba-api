@@ -3,8 +3,6 @@ package org.kenne.noudybaapi.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.kenne.noudybaapi.domain.Annee;
-import org.kenne.noudybaapi.domain.Rubrique;
 
 import java.util.Date;
 
@@ -14,8 +12,8 @@ import java.util.Date;
 public class EvenementResponseDTO {
     private Long idEvenement;
     private String code;
-    private Rubrique rubrique;
-    private Annee annee;
+    private RubriqueResponseDTO rubrique;
+    private AnneeResponseDTO annee;
     private Date dateDebut;
     private Date dateFin;
     private Date dateCreation;

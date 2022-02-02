@@ -16,4 +16,6 @@ public interface PayementSouscriptionService {
     PayementSouscriptionResponseDTO findById(Long id);
 
     List<PayementSouscriptionResponseDTO> getAll();
+
+    List<PayementSouscriptionResponseDTO> getAllByIdannee(int idAnnee);
 }
