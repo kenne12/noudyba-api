@@ -1,0 +1,3 @@
+Sort emailSort = Sort.by("email");
+Sort firstNameSort = Sort.by("first_name");
+Sort groupBySort = emailSort.and(firstNameSort);

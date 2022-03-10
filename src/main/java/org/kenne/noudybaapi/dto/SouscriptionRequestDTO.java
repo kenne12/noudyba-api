@@ -25,4 +25,5 @@ public class SouscriptionRequestDTO {
     @Min(value = 1, message = "Souscription amount can not be less than 1")
     private Double montant;
     private Date dateSouscription;
+    private String libelle;
 }

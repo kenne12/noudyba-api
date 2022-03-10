@@ -14,4 +14,5 @@ public class ContributionResponseDTO {
     private Date dateContribution;
     private EvenementResponseDTO evenement;
     private MembreResponseDTO membre;
+    private String libelle;
 }

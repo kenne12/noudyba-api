@@ -15,5 +15,7 @@ public interface AnneeService {
 
     List<AnneeResponseDTO> findAll();
 
+    List<AnneeResponseDTO> findAll(boolean etat);
+
     AnneeResponseDTO findById(Integer id);
 }

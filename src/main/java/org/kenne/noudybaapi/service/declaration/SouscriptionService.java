@@ -18,4 +18,8 @@ public interface SouscriptionService {
     List<SouscriptionResponseDTO> getAllByIdanne(int idAnnee);
 
     SouscriptionResponseDTO findById(Long id);
+
+    List<SouscriptionResponseDTO> getAllNotPaidSubscriptionByMember(long idMember, int idAnnee);
+
+    List<SouscriptionResponseDTO> getAllNotPaidSubscriptionByAnnee(int idAnnee);
 }

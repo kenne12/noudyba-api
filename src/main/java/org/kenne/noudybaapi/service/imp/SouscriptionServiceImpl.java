@@ -56,7 +56,7 @@ public class SouscriptionServiceImpl implements SouscriptionService {
     @Override
     public SouscriptionResponseDTO edit(SouscriptionRequestDTO requestDTO) {
 
-        log.info("Edit Subscription with id : ", requestDTO.getIdEvenement());
+        log.info("Edit Subscription with {id} : ", requestDTO.getIdEvenement());
 
         List<PayementSouscription> list =
                 payementSouscriptionRepository.findAllByIdsouscription(requestDTO.getIdSouscription());
@@ -70,6 +70,7 @@ public class SouscriptionServiceImpl implements SouscriptionService {
         souscriptionOld.setDateSouscription(requestDTO.getDateSouscription());
         souscriptionOld.setMembre(membreRepository.getById(requestDTO.getIdMembre()));
         souscriptionOld.setEvenement(evenementRepository.getById(requestDTO.getIdEvenement()));
+        souscriptionOld.setLibelle(requestDTO.getLibelle());
         return SouscriptionMapper.INSTANCE.fromEntityToResponse(souscriptionRepository.save(souscriptionOld));
     }
 
@@ -77,7 +78,7 @@ public class SouscriptionServiceImpl implements SouscriptionService {
     public boolean delete(Long id) {
         if (!payementSouscriptionRepository.findAllByIdsouscription(id).isEmpty())
             throw new EntityDeletionException(
-                    "Subscription cannot be deleted with id : " + id,
+                    "Subscription cannot be deleted with {id} : " + id,
                     "Subscription is associated to more payement");
 
         souscriptionRepository.deleteById(id);
@@ -94,6 +95,7 @@ public class SouscriptionServiceImpl implements SouscriptionService {
 
     @Override
     public List<SouscriptionResponseDTO> getAllByIdanne(int idAnnee) {
+        log.info("Get all Subscription with {id_annee} : ", idAnnee);
         return souscriptionRepository.findAllByIdannee(idAnnee)
                 .stream()
                 .map(SouscriptionMapper.INSTANCE::fromEntityToResponse)
@@ -102,8 +104,27 @@ public class SouscriptionServiceImpl implements SouscriptionService {
 
     @Override
     public SouscriptionResponseDTO findById(Long id) {
+        log.info("Get Subscription with {id} : ", id);
         Optional<Souscription> souscription = souscriptionRepository.findById(id);
         return souscription.map(SouscriptionMapper.INSTANCE::fromEntityToResponse).orElse(null);
+    }
+
+    @Override
+    public List<SouscriptionResponseDTO> getAllNotPaidSubscriptionByMember(long idMember, int idAnnee) {
+        log.info("Get all Subscription not paid with {id_member} and {id_annee} : ", idMember, " : ", idAnnee);
+        return souscriptionRepository.findAllByNotPayed(idMember, idAnnee)
+                .stream()
+                .map(SouscriptionMapper.INSTANCE::fromEntityToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SouscriptionResponseDTO> getAllNotPaidSubscriptionByAnnee(int idAnnee) {
+        log.info("Get all Subscription not paid with {id_annee} : ", idAnnee);
+        return souscriptionRepository.findAllByNotPayed(idAnnee)
+                .stream()
+                .map(SouscriptionMapper.INSTANCE::fromEntityToResponse)
+                .collect(Collectors.toList());
     }
 
     private Long nexId() {

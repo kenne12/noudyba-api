@@ -17,5 +17,5 @@ public class Role {
     @Id
     private Integer id;
     @NotEmpty(message = "Role Name can not be empty or null")
-    private String nom;
+    private String name;
 }

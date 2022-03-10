@@ -6,6 +6,7 @@ import org.kenne.noudybaapi.common.Response;
 import org.kenne.noudybaapi.dto.EvenementRequestDTO;
 import org.kenne.noudybaapi.dto.EvenementResponseDTO;
 import org.kenne.noudybaapi.service.declaration.EvenementService;
+import org.kenne.noudybaapi.util.UtilService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class EvenementController {
     @GetMapping("/list/all")
     public ResponseEntity<Response<List<EvenementResponseDTO>>> findAll() {
         Response<List<EvenementResponseDTO>> response = Response.<List<EvenementResponseDTO>>builder()
-                .data(evenementService.getAllEvents())
+                .datas(UtilService.getEvents("events", evenementService.getAllEvents()))
                 .message("Events list fetch successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
@@ -37,8 +38,8 @@ public class EvenementController {
     @GetMapping("/list/all/{id_annee}")
     public ResponseEntity<Response<List<EvenementResponseDTO>>> find_all_by_annee(@PathVariable("id_annee") Integer id_annee) {
         Response<List<EvenementResponseDTO>> response = Response.<List<EvenementResponseDTO>>builder()
-                .data(evenementService.getAllByIdanne(id_annee))
-                .message("Events list fetch successfully with id")
+                .datas(UtilService.getEvents("events", evenementService.getAllByIdanne(id_annee)))
+                .message("Events list fetch successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -48,7 +49,7 @@ public class EvenementController {
     @PostMapping("/save")
     public ResponseEntity<Response<EvenementResponseDTO>> save(@RequestBody @Valid EvenementRequestDTO requestDTO) {
         Response<EvenementResponseDTO> response = Response.<EvenementResponseDTO>builder()
-                .data(evenementService.save(requestDTO))
+                .datas(UtilService.getData("event", evenementService.save(requestDTO)))
                 .message("Event saved saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
@@ -60,7 +61,7 @@ public class EvenementController {
     public ResponseEntity<Response<EvenementResponseDTO>> edit(@PathVariable("id") Long id, @RequestBody @Valid EvenementRequestDTO requestDTO) {
         requestDTO.setIdEvenement(id);
         Response<EvenementResponseDTO> response = Response.<EvenementResponseDTO>builder()
-                .data(evenementService.edit(requestDTO))
+                .datas(UtilService.getData("event", evenementService.edit(requestDTO)))
                 .message("Event edited successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
@@ -71,11 +72,11 @@ public class EvenementController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Response<EvenementResponseDTO>> findById(@PathVariable("id") Long id) {
         EvenementResponseDTO responseDto = evenementService.findById(id);
-        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Entity Not Found With Id " + id);
+        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Event Not Found With {Id} " + id);
 
         Response<EvenementResponseDTO> response = Response.<EvenementResponseDTO>builder()
-                .data(responseDto)
-                .message("Event fetched with id " + id)
+                .datas(UtilService.getData("event", responseDto))
+                .message("Event fetched successfully")
                 .status(HttpStatus.FOUND)
                 .statusCode(HttpStatus.FOUND.value())
                 .build();

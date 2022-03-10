@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @NoArgsConstructor
@@ -16,6 +17,9 @@ public class ContributionRequestDTO {
     @Min(value = 1, message = "Amount can be less than 1")
     private double montant;
     private Date dateContribution;
+    @NotNull
     private Long idEvenement;
+    @NotNull
     private Long idMembre;
+    private String libelle;
 }

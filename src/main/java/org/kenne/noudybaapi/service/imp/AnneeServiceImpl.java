@@ -11,6 +11,7 @@ import org.kenne.noudybaapi.mapper.AnneeMapper;
 import org.kenne.noudybaapi.repository.AnneeRepository;
 import org.kenne.noudybaapi.repository.EvenementRepository;
 import org.kenne.noudybaapi.service.declaration.AnneeService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +59,18 @@ public class AnneeServiceImpl implements AnneeService {
 
     @Override
     public List<AnneeResponseDTO> findAll() {
-        return anneeRepository.findAll()
+        log.info("Fetch all annees");
+        //Sort.by("date_debut").and(Sort.by("date_fin"))
+        return anneeRepository.findAll(Sort.by("dateDebut").and(Sort.by("dateFin")))
+                .stream()
+                .map(AnneeMapper.INSTANCE::fromEntityToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnneeResponseDTO> findAll(boolean etat) {
+        log.info("Fetch all annees with {state} ", etat);
+        return anneeRepository.findAllByEtat(etat, Sort.by("dateDebut").and(Sort.by("dateFin")))
                 .stream()
                 .map(AnneeMapper.INSTANCE::fromEntityToResponse)
                 .collect(Collectors.toList());
@@ -66,6 +78,7 @@ public class AnneeServiceImpl implements AnneeService {
 
     @Override
     public AnneeResponseDTO findById(Integer id) {
+        log.info("Fetch annee with {id} ", id);
         Optional<Annee> annee = anneeRepository.findById(id);
         return annee.map(AnneeMapper.INSTANCE::fromEntityToResponse).orElse(null);
     }

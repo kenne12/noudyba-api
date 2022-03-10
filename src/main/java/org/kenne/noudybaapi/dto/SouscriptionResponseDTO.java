@@ -16,4 +16,5 @@ public class SouscriptionResponseDTO {
     private Double montant;
     private Double montantPaye;
     private Date dateSouscription;
+    private String libelle;
 }

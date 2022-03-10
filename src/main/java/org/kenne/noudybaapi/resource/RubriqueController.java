@@ -6,6 +6,7 @@ import org.kenne.noudybaapi.common.Response;
 import org.kenne.noudybaapi.dto.RubriqueRequestDTO;
 import org.kenne.noudybaapi.dto.RubriqueResponseDTO;
 import org.kenne.noudybaapi.service.declaration.RubriqueService;
+import org.kenne.noudybaapi.util.UtilService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class RubriqueController {
     @GetMapping("/list/all")
     public ResponseEntity<Response<List<RubriqueResponseDTO>>> findAll() {
         Response<List<RubriqueResponseDTO>> response = Response.<List<RubriqueResponseDTO>>builder()
-                .data(rubriqueService.findAll())
+                .datas(UtilService.getRubrics("rubriques", rubriqueService.findAll()))
                 .message("Rubric list fetch successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
@@ -37,8 +38,8 @@ public class RubriqueController {
     @PostMapping("/save")
     public ResponseEntity<Response<RubriqueResponseDTO>> save(@RequestBody @Valid RubriqueRequestDTO requestDTO) {
         final Response<RubriqueResponseDTO> response = Response.<RubriqueResponseDTO>builder()
-                .data(rubriqueService.save(requestDTO))
-                .message("Rubric saved saved successfully")
+                .datas(UtilService.getData("rubrique", rubriqueService.save(requestDTO)))
+                .message("Rubric saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
                 .build();
@@ -49,8 +50,8 @@ public class RubriqueController {
     public ResponseEntity<Response<RubriqueResponseDTO>> edit(@PathVariable("id") Integer id, @RequestBody @Valid RubriqueRequestDTO requestDTO) {
         requestDTO.setIdRubrique(id);
         Response<RubriqueResponseDTO> response = Response.<RubriqueResponseDTO>builder()
-                .data(rubriqueService.edit(requestDTO))
-                .message("Rubric edited successfully")
+                .datas(UtilService.getData("rubrique", rubriqueService.edit(requestDTO)))
+                .message("Rubric edited successfully with {id} " + id)
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -60,10 +61,10 @@ public class RubriqueController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Response<RubriqueResponseDTO>> findById(@PathVariable("id") Integer id) {
         RubriqueResponseDTO responseDto = rubriqueService.findById(id);
-        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Entity Not Found With Id " + id);
+        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Rubric Not Found With {Id} " + id);
         Response<RubriqueResponseDTO> response = Response.<RubriqueResponseDTO>builder()
-                .data(responseDto)
-                .message("Rubric fetched with id " + id)
+                .datas(UtilService.getData("rubrique", responseDto))
+                .message("Rubric fetched with {id} " + id)
                 .status(HttpStatus.FOUND)
                 .statusCode(HttpStatus.FOUND.value())
                 .build();
@@ -72,9 +73,9 @@ public class RubriqueController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response<?>> delete(@PathVariable("id") Integer id) {
-        boolean result = rubriqueService.delete(id);
+        rubriqueService.delete(id);
         Response<?> response = Response.builder()
-                .message(result ? "Rubric deleted successfully" : "Rubric can not be deleted")
+                .message("Rubric deleted successfully with {id} " + id)
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();

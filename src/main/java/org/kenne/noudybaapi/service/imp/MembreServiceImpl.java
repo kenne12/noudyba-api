@@ -15,13 +15,20 @@ import org.kenne.noudybaapi.repository.MembreRepository;
 import org.kenne.noudybaapi.repository.SouscriptionRepository;
 import org.kenne.noudybaapi.repository.VilleRepository;
 import org.kenne.noudybaapi.service.declaration.MembreService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Service
 @RequiredArgsConstructor
@@ -90,8 +97,21 @@ public class MembreServiceImpl implements MembreService {
     }
 
     @Override
-    public void uplaoadImage(Long id) {
+    public List<MembreResponseDTO> getAllMembers(boolean etat) {
+        log.info("Fetch all members");
+        return membreRepository.findAllByState(etat, Sort.by("code"))
+                .stream()
+                .map(MembreMapper.INSTANCE::fromEntityToResponse)
+                .collect(Collectors.toList());
+    }
 
+    @Override
+    public MembreResponseDTO uplaoadImage(Long id, MultipartFile file) throws IOException {
+        Membre membre = membreRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Member not found with id " + id));
+        String photoName = membre.getCode() + "_" + membre.getIdMembre() + "" + this.getExtension(file.getOriginalFilename());
+        membre.setPhoto(photoName);
+        Files.write(Paths.get(System.getProperty("user.home") + "/resource_projet/noudyba_resource/image/" + photoName), file.getBytes());
+        return MembreMapper.INSTANCE.fromEntityToResponse(membreRepository.save(membre));
     }
 
     private String generateMemberCode(int nbreOfCarracter) {
@@ -112,5 +132,10 @@ public class MembreServiceImpl implements MembreService {
         } catch (Exception e) {
             return 1l;
         }
+    }
+
+
+    private String getExtension(String nomFichier) {
+        return nomFichier.substring(nomFichier.lastIndexOf("."));
     }
 }

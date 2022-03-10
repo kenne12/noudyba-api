@@ -18,7 +18,7 @@ public class Contribution {
     @Column(name = "id_contribution")
     private Long idContribution;
 
-    @Min(value = 1 , message = "Amount can not be less than 1")
+    @Min(value = 1, message = "Amount can not be less than 1")
     private double montant;
 
     @Temporal(TemporalType.DATE)
@@ -36,4 +36,7 @@ public class Contribution {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation", referencedColumnName = "id_operation", updatable = false)
     private Operation operation;
+
+    @Column(length = 255)
+    private String libelle;
 }

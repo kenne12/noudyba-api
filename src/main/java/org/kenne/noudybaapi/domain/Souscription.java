@@ -38,4 +38,7 @@ public class Souscription {
     @Temporal(TemporalType.DATE)
     @Column(name = "date_souscription")
     private Date dateSouscription;
+
+    @Column(length = 255)
+    private String libelle;
 }

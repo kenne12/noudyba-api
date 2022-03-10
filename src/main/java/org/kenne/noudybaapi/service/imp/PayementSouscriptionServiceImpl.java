@@ -58,9 +58,8 @@ public class PayementSouscriptionServiceImpl implements PayementSouscriptionServ
                 .idMembre(souscription.getMembre().getIdMembre())
                 .operationType(OperationType.PROJET)
                 .idRubrique(souscription.getEvenement().getRubrique().getIdRubrique())
+                .libelle(souscription.getLibelle())
                 .build();
-
-        operationRequest.setLibelle("Payement Souscription ................. Rubrique ...................... " + souscription.getEvenement().getRubrique().getNom());
         Operation operation = operationService.save(operationRequest);
 
         // save payement souscription

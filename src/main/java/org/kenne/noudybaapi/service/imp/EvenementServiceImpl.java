@@ -13,6 +13,7 @@ import org.kenne.noudybaapi.exception.EntityNotFoundException;
 import org.kenne.noudybaapi.mapper.EvenementMapper;
 import org.kenne.noudybaapi.repository.*;
 import org.kenne.noudybaapi.service.declaration.EvenementService;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,7 +75,7 @@ public class EvenementServiceImpl implements EvenementService {
     public List<EvenementResponseDTO> getAllEvents() {
         log.info("Fetch all events");
         return evenementRepository
-                .findAll()
+                .findAll(Sort.by("dateDebut").and(Sort.by("idEvenement")))
                 .stream()
                 .map(EvenementMapper.INSTANCE::fromEntityToResponse)
                 .collect(Collectors.toList());
@@ -91,7 +92,7 @@ public class EvenementServiceImpl implements EvenementService {
 
     @Override
     public EvenementResponseDTO findById(Long id) {
-        log.info("Fetch Event With id : ", id);
+        log.info("Fetch Event With {id} : ", id);
         Optional<Evenement> evenement = evenementRepository.findById(id);
         return evenement.map(EvenementMapper.INSTANCE::fromEntityToResponse).orElse(null);
     }

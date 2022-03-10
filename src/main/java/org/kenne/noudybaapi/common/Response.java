@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Data
 @SuperBuilder
@@ -19,7 +20,6 @@ public class Response<T> {
     protected String reason;
     protected String message;
     protected String developerMessage;
-    //protected Map<?, ?> data;
+    protected Map<String, T> datas;
     protected T data;
-
 }

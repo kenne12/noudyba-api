@@ -6,6 +6,7 @@ import org.kenne.noudybaapi.common.Response;
 import org.kenne.noudybaapi.dto.PayementSouscriptionRequestDTO;
 import org.kenne.noudybaapi.dto.PayementSouscriptionResponseDTO;
 import org.kenne.noudybaapi.service.declaration.PayementSouscriptionService;
+import org.kenne.noudybaapi.util.UtilService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/payement")
-@Tag(name = "PayementController")
+@RequestMapping("/api/v1/payment")
+@Tag(name = "PaymentController")
 public class PayementSouscriptionController {
 
     private final PayementSouscriptionService service;
@@ -26,7 +27,7 @@ public class PayementSouscriptionController {
     @GetMapping("/list/all")
     public ResponseEntity<Response<List<PayementSouscriptionResponseDTO>>> findAll() {
         Response<List<PayementSouscriptionResponseDTO>> response = Response.<List<PayementSouscriptionResponseDTO>>builder()
-                .data(service.getAll())
+                .datas(UtilService.getPayements("payments", service.getAll()))
                 .message("Payment list fetch successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
@@ -37,7 +38,7 @@ public class PayementSouscriptionController {
     @GetMapping("/list/all/{id_annee}")
     public ResponseEntity<Response<List<PayementSouscriptionResponseDTO>>> findAll(@PathVariable("id_annee") Integer id_annee) {
         Response<List<PayementSouscriptionResponseDTO>> response = Response.<List<PayementSouscriptionResponseDTO>>builder()
-                .data(service.getAllByIdannee(id_annee))
+                .datas(UtilService.getPayements("payments", service.getAllByIdannee(id_annee)))
                 .message("Payment list fetch successfully with {Id}")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
@@ -48,7 +49,7 @@ public class PayementSouscriptionController {
     @PostMapping("/save")
     public ResponseEntity<Response<PayementSouscriptionResponseDTO>> save(@RequestBody @Valid PayementSouscriptionRequestDTO requestDTO) {
         Response<PayementSouscriptionResponseDTO> response = Response.<PayementSouscriptionResponseDTO>builder()
-                .data(service.save(requestDTO))
+                .datas(UtilService.getData("payment", service.save(requestDTO)))
                 .message("Payment saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
@@ -60,7 +61,7 @@ public class PayementSouscriptionController {
     public ResponseEntity<Response<PayementSouscriptionResponseDTO>> edit(@PathVariable("id") Long id, @RequestBody @Valid PayementSouscriptionRequestDTO requestDTO) {
         requestDTO.setIdPayementSouscription(id);
         Response<PayementSouscriptionResponseDTO> response = Response.<PayementSouscriptionResponseDTO>builder()
-                .data(service.edit(requestDTO))
+                .datas(UtilService.getData("payment", service.edit(requestDTO)))
                 .message("Payment edited successfully with {Id}")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
@@ -71,10 +72,10 @@ public class PayementSouscriptionController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Response<PayementSouscriptionResponseDTO>> findById(@PathVariable("id") Long id) {
         PayementSouscriptionResponseDTO responseDto = service.findById(id);
-        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Entity Not Found With {Id} " + id);
+        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Payment Not Found With {Id} " + id);
 
         Response<PayementSouscriptionResponseDTO> response = Response.<PayementSouscriptionResponseDTO>builder()
-                .data(responseDto)
+                .datas(UtilService.getData("payment", responseDto))
                 .message("Payment fetched successfully")
                 .status(HttpStatus.FOUND)
                 .statusCode(HttpStatus.FOUND.value())

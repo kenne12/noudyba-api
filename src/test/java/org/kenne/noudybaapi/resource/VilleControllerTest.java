@@ -60,8 +60,8 @@ public class VilleControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Ville saved successfully"))
-                .andExpect(jsonPath("$.data.nom").value("Bafoussam"))
-                .andExpect(jsonPath("$.data.idVille").exists())
+                .andExpect(jsonPath("$.datas.ville.nom").value("Bafoussam"))
+                .andExpect(jsonPath("$.datas.ville.idVille").exists())
                 .andExpect(jsonPath("$.statusCode", is(201)))
                 .andReturn();
 
@@ -71,47 +71,49 @@ public class VilleControllerTest {
     @Test
     @Order(value = 2)
     @DisplayName(value = "Find Ville By Id")
-    public void testWeCanReadStudent() throws Exception {
+    public void testWeCanReadVille() throws Exception {
+        final int idVille = json.getJSONObject("datas").getJSONObject("ville").getInt("idVille");
         this.mvc
                 .perform(MockMvcRequestBuilders
-                        .get("/api/v1/ville/get/" + json.getJSONObject("data").getInt("idVille")))
+                        .get("/api/v1/ville/get/" + idVille))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("Ville fetched successfully"))
-                .andExpect(jsonPath("$.data.nom", is("Bafoussam")));
+                .andExpect(jsonPath("$.message").value("Ville fetched successfully with {id} " + idVille))
+                .andExpect(jsonPath("$.datas.ville.nom", is("Bafoussam")));
         //.andExpect(jsonPath("$.message", is("City fetched with id " + json.getJSONObject("data").getInt("idVille"))));
     }
 
     @Test
     @Order(value = 3)
     @DisplayName("Show list of cities")
-    public void testThatWeCanShowListOfStudent() throws Exception {
+    public void testThatWeCanShowListOfVille() throws Exception {
         this.mvc.perform(
                         MockMvcRequestBuilders
                                 .get("/api/v1/ville/list/all"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].nom", is("Bafoussam")))
+                .andExpect(jsonPath("$.datas.villes[0].nom", is("Bafoussam")))
                 .andExpect(jsonPath("$.message").value("Villes list fetched successfully"));
-
     }
 
     @Test
     @Order(value = 4)
     @DisplayName("Edit city With Id")
     public void testThatWeCanUpdateCity() throws Exception {
-        VilleRequestDTO requestDTO = new VilleRequestDTO(json.getJSONObject("data").getInt("idVille"), "Douala");
+
+        final int idVille = json.getJSONObject("datas").getJSONObject("ville").getInt("idVille");
+        VilleRequestDTO requestDTO = new VilleRequestDTO(idVille, "Douala");
         String content = mapper.writeValueAsString(requestDTO);
         this.mvc.perform(
                         MockMvcRequestBuilders
-                                .put("/api/v1/ville/edit/" + json.getJSONObject("data").getInt("idVille"))
+                                .put("/api/v1/ville/edit/" + idVille)
                                 .content(content)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.nom", is("Douala")))
-                .andExpect(jsonPath("$.message", is("Ville edited successfully")))
-                .andExpect(jsonPath("$.data.idVille", is(json.getJSONObject("data").getInt("idVille"))));
+                .andExpect(jsonPath("$.datas.ville.nom", is("Douala")))
+                .andExpect(jsonPath("$.message", is("Ville edited successfully with {id} " + idVille)))
+                .andExpect(jsonPath("$.datas.ville.idVille", is(idVille)));
     }
 
     @Test
@@ -119,7 +121,7 @@ public class VilleControllerTest {
     @DisplayName("Delete City With Id")
     public void testThatWeCanDeleteCity() throws Exception {
         this.mvc.perform(
-                        MockMvcRequestBuilders.delete("/api/v1/ville/delete/" + json.getJSONObject("data").getInt("idVille")))
+                        MockMvcRequestBuilders.delete("/api/v1/ville/delete/" + json.getJSONObject("datas").getJSONObject("ville").getInt("idVille")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is("Ville deleted successfully")));

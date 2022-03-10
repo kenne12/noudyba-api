@@ -26,11 +26,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    protected ResponseEntity<Object> handleDeletionException(EntityDeletionException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ErrorDto error = new ErrorDto(HttpStatus.BAD_REQUEST, "Error => ", ex.getMessage() + " " + ex.getReason());
-        logger.error("handleDeletionException error => ", ex);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     private ResponseEntity<ErrorDto> handleEntityNotFound(EntityNotFoundException ex) {

@@ -44,7 +44,7 @@ public class ContributionServiceImpl implements ContributionService {
         op.setIdAnnee(evenement.getAnnee().getIdAnnee());
         op.setIdMembre(requestDTO.getIdMembre());
         op.setOperationType(OperationType.DON);
-        op.setLibelle("Contribution ................... Dans la rubrique ......... " + evenement.getRubrique().getNom());
+        op.setLibelle(requestDTO.getLibelle());
         op.setIdRubrique(evenement.getRubrique().getIdRubrique());
         op.setMontant(requestDTO.getMontant());
         Operation operation = operationService.save(op);
