@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,8 +93,9 @@ public class EvenementServiceImpl implements EvenementService {
     @Override
     public EvenementResponseDTO findById(Long id) {
         log.info("Fetch Event With {id} : ", id);
-        Optional<Evenement> evenement = evenementRepository.findById(id);
-        return evenement.map(EvenementMapper.INSTANCE::fromEntityToResponse).orElse(null);
+        return evenementRepository.findById(id)
+                .map(EvenementMapper.INSTANCE::fromEntityToResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id : " + id));
     }
 
     private String generateCode(Integer length) {
@@ -108,5 +109,15 @@ public class EvenementServiceImpl implements EvenementService {
         } catch (Exception e) {
             return 1L;
         }
+    }
+
+    private void algoMinMax() {
+        Integer[] value = {15, 20, 30, -40};
+
+        Integer mix = Arrays.stream(value)
+                .min((numberOne, numberTwo) -> {
+                    return numberOne < numberTwo ? 1 : 0;
+                })
+                .orElse(null);
     }
 }

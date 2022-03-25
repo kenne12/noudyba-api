@@ -107,7 +107,7 @@ public class UtilisateurRestController {
     public ResponseEntity<Response<UtilisateurResponseDTO>> addRoles(@RequestBody UserRoleForm userRoleForm) {
         Response<UtilisateurResponseDTO> response = Response.<UtilisateurResponseDTO>builder()
                 .datas(UtilService.getData("user", utilisateurService.addRolesToUser(userRoleForm.getUsername(), userRoleForm.getRoleNames())))
-                .message("User Roles added successfully")
+                .message("User Roles granted successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -120,8 +120,14 @@ public class UtilisateurRestController {
     }
 
     @PostMapping(path = "/remove_roles")
-    public UtilisateurResponseDTO removeRole(@RequestBody UserRoleForm userRoleForm) {
-        return utilisateurService.removeRoles(userRoleForm.getUsername(), userRoleForm.getRoleNames());
+    public ResponseEntity<Response<UtilisateurResponseDTO>> removeRole(@RequestBody UserRoleForm userRoleForm) {
+        Response<UtilisateurResponseDTO> response = Response.<UtilisateurResponseDTO>builder()
+                .datas(UtilService.getData("user", utilisateurService.removeRoles(userRoleForm.getUsername(), userRoleForm.getRoleNames())))
+                .message("User Roles revoked successfully")
+                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete/{id}")

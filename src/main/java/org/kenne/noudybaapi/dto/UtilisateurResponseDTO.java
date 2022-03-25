@@ -5,9 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.kenne.noudybaapi.domain.Role;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
 import java.util.Collection;
 import java.util.Date;
 

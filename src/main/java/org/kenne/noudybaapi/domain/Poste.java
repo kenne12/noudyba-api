@@ -23,4 +23,8 @@ public class Poste {
     @NotEmpty(message = "Name can not be empty or null")
     @Column(length = 30)
     private String nom;
+
+    public Poste(Integer idPoste) {
+        this.idPoste = idPoste;
+    }
 }

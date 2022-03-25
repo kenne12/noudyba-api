@@ -37,7 +37,9 @@ public class ContributionServiceImpl implements ContributionService {
     public ContributionResponseDTO save(ContributionRequestDTO requestDTO) {
         log.info("Save new Contribution {} ");
 
-        Evenement evenement = evenementRepository.getById(requestDTO.getIdEvenement());
+        Evenement evenement = evenementRepository.findById(requestDTO.getIdEvenement())
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id " + requestDTO.getIdEvenement()));
+
 
         OperationRequestDTO op = new OperationRequestDTO();
         op.setDateOperation(requestDTO.getDateContribution());
@@ -78,7 +80,7 @@ public class ContributionServiceImpl implements ContributionService {
 
     @Override
     public List<ContributionResponseDTO> getAll() {
-        log.info("Fetch all Contribution");
+        log.info("Fetch all Contributions");
         return contributionRepository.findAll()
                 .stream()
                 .map(ContributionMapper.INSTANCE::fromEntityToResponse)
@@ -97,8 +99,8 @@ public class ContributionServiceImpl implements ContributionService {
     @Override
     public ContributionResponseDTO findById(Long id) {
         log.info("Fetch Contribution with {Id}", id);
-        Contribution contribution = contributionRepository.findById(id)
+        return contributionRepository.findById(id)
+                .map(ContributionMapper.INSTANCE::fromEntityToResponse)
                 .orElseThrow(() -> new EntityNotFoundException("Contribution not found with id : " + id));
-        return ContributionMapper.INSTANCE.fromEntityToResponse(contribution);
     }
 }

@@ -13,4 +13,6 @@ public interface PosteMapper {
     public PosteResponseDTO fromEntityToResponse(Poste poste);
 
     public Poste fromRequestToEntity(PosteRequestDTO requestDTO);
+
+    public PosteRequestDTO fromEntityToRequest(Poste poste);
 }
