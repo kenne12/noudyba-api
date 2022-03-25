@@ -1,7 +1,6 @@
 package org.kenne.noudybaapi;
 
 import lombok.AllArgsConstructor;
-import org.kenne.noudybaapi.service.declaration.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +23,7 @@ public class NoudybaApiApplication {
     }
 
     @Bean
-    CommandLineRunner run(VilleService villeService,
+    CommandLineRunner run(/*VilleService villeService,
                           MembreService membreService,
                           RubriqueService rubriqueService,
                           AnneeService anneeService,
@@ -34,7 +33,7 @@ public class NoudybaApiApplication {
                           ContributionService contributionService,
                           PosteService posteService,
                           UtilisateurService utilisateurService,
-                          PeriodeService periodeService) {
+                          PeriodeService periodeService*/) {
         return args -> {
 
             /*villeService.save(new VilleRequestDTO(null, "Bafoussam"));

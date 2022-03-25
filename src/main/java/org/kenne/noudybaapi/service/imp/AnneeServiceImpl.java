@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,8 +78,11 @@ public class AnneeServiceImpl implements AnneeService {
     @Override
     public AnneeResponseDTO findById(Integer id) {
         log.info("Fetch annee with {id} ", id);
-        Optional<Annee> annee = anneeRepository.findById(id);
-        return annee.map(AnneeMapper.INSTANCE::fromEntityToResponse).orElse(null);
+
+        return anneeRepository.findById(id)
+                .map(AnneeMapper.INSTANCE::fromEntityToResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Annee not found with id : " + id));
+
     }
 
     private Integer nextId() {

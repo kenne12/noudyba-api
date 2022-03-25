@@ -1,14 +1,24 @@
 package org.kenne.noudybaapi.common;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
+
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorDto {
 
     private HttpStatus httpStatus;
+    private Integer statusCode;
     private LocalDateTime timestamp;
     private String message;
     private String details;
+
+    public ErrorDto() {
+        this.timestamp = LocalDateTime.now();
+    }
 
     public ErrorDto(HttpStatus httpStatus, String message, String details) {
         this.httpStatus = httpStatus;
@@ -17,19 +27,24 @@ public class ErrorDto {
         this.details = details;
     }
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
+    public ErrorDto(HttpStatus httpStatus, String message) {
+        this.httpStatus = httpStatus;
+        this.timestamp = LocalDateTime.now();
+        this.message = message;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public ErrorDto(HttpStatus httpStatus, String message, String details, int statusCode) {
+        this.httpStatus = httpStatus;
+        this.timestamp = LocalDateTime.now();
+        this.message = message;
+        this.details = details;
+        this.statusCode = statusCode;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public String getDetails() {
-        return details;
+    public ErrorDto(HttpStatus httpStatus, String message, int statusCode) {
+        this.httpStatus = httpStatus;
+        this.timestamp = LocalDateTime.now();
+        this.message = message;
+        this.statusCode = statusCode;
     }
 }

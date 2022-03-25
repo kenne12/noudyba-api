@@ -13,6 +13,10 @@ import javax.validation.constraints.NotEmpty;
 public class PosteRequestDTO {
     private Integer idPoste;
     private String code;
-    @NotEmpty( message = "Name can not be null or empty")
+    @NotEmpty(message = "Name can not be null or empty")
     private String nom;
+
+    public PosteRequestDTO(Integer idPoste) {
+        this.idPoste = idPoste;
+    }
 }

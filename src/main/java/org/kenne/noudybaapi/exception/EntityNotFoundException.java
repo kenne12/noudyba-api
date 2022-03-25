@@ -1,23 +1,25 @@
 package org.kenne.noudybaapi.exception;
 
-public class EntityNotFoundException extends javax.persistence.EntityNotFoundException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-    private String reason;
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class EntityNotFoundException extends RuntimeException {
+
+    public EntityNotFoundException() {
+        super();
+    }
 
     public EntityNotFoundException(String message) {
         super(message);
     }
 
-    public EntityNotFoundException(String message, String reason) {
-        super(message);
-        this.reason = reason;
+    public EntityNotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public String getReason() {
-        return reason;
+    public EntityNotFoundException(Throwable cause) {
+        super(cause);
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
 }

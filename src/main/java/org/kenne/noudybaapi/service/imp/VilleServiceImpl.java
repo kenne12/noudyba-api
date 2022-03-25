@@ -1,15 +1,17 @@
 package org.kenne.noudybaapi.service.imp;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.kenne.noudybaapi.domain.Ville;
 import org.kenne.noudybaapi.dto.VilleRequestDTO;
 import org.kenne.noudybaapi.dto.VilleResponseDTO;
+import org.kenne.noudybaapi.exception.EntityNotFoundException;
 import org.kenne.noudybaapi.mapper.VilleMapper;
 import org.kenne.noudybaapi.repository.VilleRepository;
 import org.kenne.noudybaapi.service.declaration.VilleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,10 +19,11 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
+@AllArgsConstructor
 public class VilleServiceImpl implements VilleService {
 
-    @Autowired
-    private VilleRepository villeRepository;
+
+    private final VilleRepository villeRepository;
 
     @Override
     public List<VilleResponseDTO> findAll() {
@@ -33,6 +36,8 @@ public class VilleServiceImpl implements VilleService {
 
     @Override
     public VilleResponseDTO findById(Integer id) {
+        villeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ville not found with id : " + id));
         Optional<Ville> ville = villeRepository.findById(id);
         return ville.map(VilleMapper.INSTANCE::fromEntityToResponse).orElse(null);
     }
@@ -48,7 +53,9 @@ public class VilleServiceImpl implements VilleService {
 
     @Override
     public VilleResponseDTO edit(VilleRequestDTO requestDTO) {
-        log.info("Edit ville {id}", requestDTO.getIdVille());
+        log.info("Edit ville {id} ", requestDTO.getIdVille());
+        villeRepository.findById(requestDTO.getIdVille())
+                .orElseThrow(() -> new EntityNotFoundException("Ville not found with id : " + requestDTO.getIdVille()));
         Ville ville = VilleMapper.INSTANCE.fromRequestToEntity(requestDTO);
         return VilleMapper.INSTANCE.fromEntityToResponse(villeRepository.save(ville));
     }
@@ -56,6 +63,8 @@ public class VilleServiceImpl implements VilleService {
     @Override
     public boolean delete(Integer id) {
         log.info("Delete ville {id}", id);
+        villeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ville not found with id : " + id));
         villeRepository.deleteById(id);
         return true;
     }
