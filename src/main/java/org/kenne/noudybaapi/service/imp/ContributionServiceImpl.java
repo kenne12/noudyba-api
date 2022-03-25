@@ -37,18 +37,22 @@ public class ContributionServiceImpl implements ContributionService {
     public ContributionResponseDTO save(ContributionRequestDTO requestDTO) {
         log.info("Save new Contribution {} ");
 
+
         Evenement evenement = evenementRepository.findById(requestDTO.getIdEvenement())
-                .orElseThrow(() -> new EntityNotFoundException("Event not found with id " + requestDTO.getIdEvenement()));
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id : " + requestDTO.getIdEvenement()));
+
+        OperationRequestDTO op = OperationRequestDTO
+                .builder()
+                .dateOperation(requestDTO.getDateContribution())
+                .idAnnee(evenement.getAnnee().getIdAnnee())
+                .idMembre(requestDTO.getIdMembre())
+                .montant(requestDTO.getMontant())
+                .idRubrique(evenement.getRubrique().getIdRubrique())
+                .libelle("Contribution Directe : " + evenement.getCommentaire())
+                .operationType(OperationType.PROJET)
+                .build();
 
 
-        OperationRequestDTO op = new OperationRequestDTO();
-        op.setDateOperation(requestDTO.getDateContribution());
-        op.setIdAnnee(evenement.getAnnee().getIdAnnee());
-        op.setIdMembre(requestDTO.getIdMembre());
-        op.setOperationType(OperationType.DON);
-        op.setLibelle(requestDTO.getLibelle());
-        op.setIdRubrique(evenement.getRubrique().getIdRubrique());
-        op.setMontant(requestDTO.getMontant());
         Operation operation = operationService.save(op);
 
         Contribution contribution = ContributionMapper.INSTANCE.fromRequestToEntity(requestDTO);
@@ -72,7 +76,7 @@ public class ContributionServiceImpl implements ContributionService {
     public boolean delete(Long id) {
         log.warn("Delete Contribution with {Id}", id);
         Contribution contribution = contributionRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Contribution with id : " + id + " doesn't exist"));
+                .orElseThrow(() -> new EntityNotFoundException("Contribution not found with id : " + id));
         contributionRepository.deleteById(contribution.getIdContribution());
         operationService.delete(contribution.getOperation().getIdOperation());
         return true;

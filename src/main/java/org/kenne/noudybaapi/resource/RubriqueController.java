@@ -51,7 +51,7 @@ public class RubriqueController {
         requestDTO.setIdRubrique(id);
         Response<RubriqueResponseDTO> response = Response.<RubriqueResponseDTO>builder()
                 .datas(UtilService.getData("rubrique", rubriqueService.edit(requestDTO)))
-                .message("Rubric edited successfully with {id} " + id)
+                .message("Rubric edited successfully with")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -64,7 +64,7 @@ public class RubriqueController {
         if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Rubric Not Found With {Id} " + id);
         Response<RubriqueResponseDTO> response = Response.<RubriqueResponseDTO>builder()
                 .datas(UtilService.getData("rubrique", responseDto))
-                .message("Rubric fetched with {id} " + id)
+                .message("Rubric fetched successfully ")
                 .status(HttpStatus.FOUND)
                 .statusCode(HttpStatus.FOUND.value())
                 .build();
@@ -75,7 +75,7 @@ public class RubriqueController {
     public ResponseEntity<Response<?>> delete(@PathVariable("id") Integer id) {
         rubriqueService.delete(id);
         Response<?> response = Response.builder()
-                .message("Rubric deleted successfully with {id} " + id)
+                .message("Rubric deleted successfully with")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();

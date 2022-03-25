@@ -38,7 +38,7 @@ public class PosteController {
     public ResponseEntity<Response<PosteResponseDTO>> save(@RequestBody @Valid PosteRequestDTO requestDTO) {
         final Response<PosteResponseDTO> response = Response.<PosteResponseDTO>builder()
                 .data(posteService.save(requestDTO))
-                .message("Poste saved saved successfully")
+                .message("Poste saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
                 .build();
@@ -63,7 +63,7 @@ public class PosteController {
         if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Entity Not Found With Id " + id);
         Response<PosteResponseDTO> response = Response.<PosteResponseDTO>builder()
                 .data(responseDto)
-                .message("Poste fetched with id " + id)
+                .message("Poste fetched with successfully" )
                 .status(HttpStatus.FOUND)
                 .statusCode(HttpStatus.FOUND.value())
                 .build();
@@ -72,9 +72,9 @@ public class PosteController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Response<?>> delete(@PathVariable("id") Integer id) {
-        boolean result = posteService.delete(id);
+        posteService.delete(id);
         Response<?> response = Response.builder()
-                .message(result ? "Poste deleted successfully" : "Poste can not be deleted")
+                .message("Poste deleted successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();

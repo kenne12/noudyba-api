@@ -47,7 +47,6 @@ public class MembreController {
     public ResponseEntity<Response<List<MembreResponseDTO>>> findAll(@PathVariable("etat") boolean etat) {
         List<MembreResponseDTO> list = membreService.getAllMembers(etat);
         Response<List<MembreResponseDTO>> response = Response.<List<MembreResponseDTO>>builder()
-                //.data(list)
                 .datas(UtilService.getData("membres", list))
                 .message("Members list fetch successfully with state : " + true)
                 .status(HttpStatus.OK)
