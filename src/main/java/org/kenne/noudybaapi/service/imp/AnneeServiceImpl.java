@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AnneeServiceImpl implements AnneeService {
 
-    private AnneeRepository anneeRepository;
-    private EvenementRepository evenementRepository;
+    private final AnneeRepository anneeRepository;
+    private final EvenementRepository evenementRepository;
 
     @Override
     public AnneeResponseDTO save(AnneeRequestDTO requestDTO) {

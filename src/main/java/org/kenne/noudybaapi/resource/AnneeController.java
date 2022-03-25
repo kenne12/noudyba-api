@@ -50,7 +50,7 @@ public class AnneeController {
     public ResponseEntity<Response<AnneeResponseDTO>> save(@RequestBody @Valid AnneeRequestDTO requestDTO) {
         final Response<AnneeResponseDTO> response = Response.<AnneeResponseDTO>builder()
                 .datas(UtilService.getData("annee", anneeService.save(requestDTO)))
-                .message("Annee saved saved successfully")
+                .message("Annee saved successfully")
                 .status(HttpStatus.CREATED)
                 .statusCode(HttpStatus.CREATED.value())
                 .build();
@@ -72,7 +72,7 @@ public class AnneeController {
     @GetMapping("/get/{id}")
     public ResponseEntity<Response<AnneeResponseDTO>> findById(@PathVariable("id") Integer id) {
         AnneeResponseDTO responseDto = anneeService.findById(id);
-        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Annee Not Found With Id " + id);
+        if (Objects.isNull(responseDto)) throw new EntityNotFoundException("Annee Not Found With Id : " + id);
         Response<AnneeResponseDTO> response = Response.<AnneeResponseDTO>builder()
                 .datas(UtilService.getData("annee", responseDto))
                 .message("Annee fetched successfully")

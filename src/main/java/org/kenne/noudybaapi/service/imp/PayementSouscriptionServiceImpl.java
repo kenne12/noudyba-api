@@ -58,7 +58,7 @@ public class PayementSouscriptionServiceImpl implements PayementSouscriptionServ
                 .idMembre(souscription.getMembre().getIdMembre())
                 .operationType(OperationType.PROJET)
                 .idRubrique(souscription.getEvenement().getRubrique().getIdRubrique())
-                .libelle(souscription.getLibelle())
+                .libelle("Payement : " + souscription.getLibelle())
                 .build();
         Operation operation = operationService.save(operationRequest);
 
@@ -96,7 +96,7 @@ public class PayementSouscriptionServiceImpl implements PayementSouscriptionServ
         PayementSouscription ps = payementSouscriptionRepository.findById(id)
                 .orElseThrow(() -> new EntityDeletionException("Payement can not be deleted", "Payement not found with id : " + id));
         // update initial souscription
-        Souscription s = ps.getSouscription(); //souscriptionRepository.getById(ps.getSouscription().getIdSouscription());
+        Souscription s = ps.getSouscription();
         s.setMontantPaye(s.getMontantPaye() - ps.getMontant());
         souscriptionRepository.save(s);
         // delete payement

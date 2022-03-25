@@ -39,7 +39,7 @@ public class SouscriptionController {
     public ResponseEntity<Response<List<SouscriptionResponseDTO>>> findAllByIdannee(@PathVariable("id_annee") Integer id_annee) {
         Response<List<SouscriptionResponseDTO>> response = Response.<List<SouscriptionResponseDTO>>builder()
                 .datas(UtilService.getSubs("subscriptions", souscriptionService.getAllByIdanne(id_annee)))
-                .message("Subscriptions list fetch successfully with {id_annee}")
+                .message("Subscriptions list fetch successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -53,7 +53,7 @@ public class SouscriptionController {
                                     @PathVariable("id_annee") Integer id_annee) {
         Response<List<SouscriptionResponseDTO>> response = Response.<List<SouscriptionResponseDTO>>builder()
                 .datas(UtilService.getSubs("subscriptions", souscriptionService.getAllNotPaidSubscriptionByMember(id_membre, id_annee)))
-                .message("Subscriptions list fetch successfully with {id_membre} and {id_annee}")
+                .message("Subscriptions list fetch successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -65,7 +65,7 @@ public class SouscriptionController {
     findSubsNotPaidByAnnee(@PathVariable("id_annee") Integer id_annee) {
         Response<List<SouscriptionResponseDTO>> response = Response.<List<SouscriptionResponseDTO>>builder()
                 .datas(UtilService.getSubs("subscriptions", souscriptionService.getAllNotPaidSubscriptionByAnnee(id_annee)))
-                .message("Subscriptions list fetch successfully with {id_annee}")
+                .message("Subscriptions list fetch successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
@@ -88,7 +88,7 @@ public class SouscriptionController {
         requestDTO.setIdSouscription(id);
         Response<SouscriptionResponseDTO> response = Response.<SouscriptionResponseDTO>builder()
                 .datas(UtilService.getData("subscription", souscriptionService.edit(requestDTO)))
-                .message("Subscription edited successfully with {Id}")
+                .message("Subscription edited successfully")
                 .status(HttpStatus.OK)
                 .statusCode(HttpStatus.OK.value())
                 .build();
